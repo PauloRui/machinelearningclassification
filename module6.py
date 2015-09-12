@@ -22,9 +22,49 @@ dataList = list(csvData)
 dataArray =  numpy.array(dataList)
 X = dataArray[:,2:32].astype(float)
 y = dataArray[:, 1]
-le = preprocessing.LabelEncoder()
-le.fit(y)
-yTransformed = le.transform(y)
+
+#Creating charts
+yFreq = scipy.stats.itemfreq(y)
+print yFreq
+
+plt.bar(left = 0, height = int(yFreq[0][1]), color='b')
+plt.bar(left = 1, height = int(yFreq[1][1]), color='r')
+plt.xlabel("diagnosis")
+plt.ylabel("frequency")
+plt.legend(['B', 'M'])
+plt.show()
+
+#encodes the labels B and M into numerical variables
+le = preprocessing.LabelEncoder() # creates the function
+le.fit(y) # isnpects the data to find out how many numbers to use
+yTransformed = le.transform(y) # transforms the dataset into numerical values
+
+#scatter plot for correlation matrix
+correlationMatrix = numpy.corrcoef(X, rowvar=0)
+plt.pcolor(correlationMatrix, cmap = plt.cm.coolwarm_r)# the _r reverses the ordering of the color
+plt.clim(-1,1)#sets the range of values
+plt.colorbar()
+plt.show()
+
+#create a scatter plot
+plt.scatter(x = X[:, 0], y = X[:, 1], c = y)
+plt.xlabel("radius")
+plt.ylabel("texture")
+plt.show()
+
+#create a scatter plot panel
+def scatter_plot(X, y):
+    plt.figure(figsize= (2*X,shape[1],2*X,shape[1]))
+    for i in range(X,shape[1]):
+        for j in range(X,shape[1]):
+
+            plt.subplot(X.shape[1], X.shape[1], i+1+j*X.shape[1])
+
+            plt.subplot()
+
+
+
+
 XTrain, XTest, yTrain, yTest = train_test_split(X, yTransformed)
 
 knnK3 = neighbors.KNeighborsClassifier(n_neighbors = 3)
